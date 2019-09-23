@@ -17,8 +17,8 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::middleware('auth')->group(function () {
-    Route::get('/home', 'HomeController@index')->name('home');
-});
-Route::get('/thread', 'ThreadController@index');
-Route::get('/thread/{thread}', 'ThreadController@show');
+Route::get('/home', 'HomeController@index');
+Route::get('/threads', 'ThreadsController@index');
+Route::post('/threads', 'ThreadsController@store');
+Route::get('/threads/{thread}', 'ThreadsController@show');
+Route::post('/threads/{thread}/replies', 'RepliesController@store');

@@ -5,16 +5,26 @@ namespace App\Http\Controllers;
 use App\Thread;
 use Illuminate\Http\Request;
 
-class ThreadController extends Controller
+class ThreadsController extends Controller
 {
+    /**
+     * ThreadsController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth')->only('store');
+    }
+
+
     /**
      * Display a listing of the resource.
      *
-     * @return Thread[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $threads = Thread::all();
+        $threads = Thread::latest()->get();
+
         return view('threads.index', compact('threads'));
     }
 
@@ -36,14 +46,20 @@ class ThreadController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $thread = Thread::create([
+            'user_id' => auth()->id(),
+            'title' => request('title'),
+            'body'  => request('body')
+        ]);
+
+        return redirect($thread->path());
     }
 
     /**
      * Display the specified resource.
      *
      * @param  \App\Thread  $thread
-     * @return Thread|\Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function show(Thread $thread)
     {
