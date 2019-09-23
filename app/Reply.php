@@ -23,8 +23,12 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Reply whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Reply whereUserId($value)
  * @mixin \Eloquent
+ * @property-read \App\User $owner
  */
 class Reply extends Model
 {
-    //
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

@@ -9,18 +9,29 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class ThreadTest extends TestCase
+/**
+ * @property mixed thread
+ */
+class ReadThreadsTest extends TestCase
 {
     use DatabaseMigrations;
 
+    /**
+     *
+     */
+    public function setUp() :void
+    {
+        parent::setUp();
+        $this->thread = factory(Thread::class)->create();
+    }
     /**
      * @test
      */
     public function a_user_can_view_all_threads()
     {
-        $thread = factory(Thread::class)->create();
+
         $response = $this->get('/thread')
-            ->assertSee($thread->title);
+            ->assertSee($this->thread->title);
     }
 
     /** @test */
@@ -42,4 +53,15 @@ class ThreadTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    /** @test */
+    function a_user_can_read_replies_that_are_associated_with_a_thread()
+    {
+        $reply = factory('App\Reply')
+            ->create(['thread_id' => $this->thread->id]);
+
+        $this->get('/thread/' . $this->thread->id)
+            ->assertSee($reply->body);
+    }
+
 }
