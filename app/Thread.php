@@ -25,6 +25,10 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Reply[] $replies
  * @property-read int|null $replies_count
+ * @property int $channel_id
+ * @property-read \App\Channel $channel
+ * @property-read \App\User $creator
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread whereChannelId($value)
  */
 class Thread extends Model
 {
