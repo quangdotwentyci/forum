@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Channel;
+use App\Thread;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
@@ -26,12 +28,36 @@ class CreateThreadsTest extends TestCase
     {
         $this->signIn();
 
-        $thread = create('App\Thread');
+        $thread = make('App\Thread');
 
-        $this->post('/threads', $thread->toArray());
+        $res = $this->post('/threads', $thread->toArray());
 
-        $this->get($thread->path())
+        $this->get($res->headers->get('location'))
             ->assertSee($thread->title)
             ->assertSee($thread->body);
+    }
+
+    /** @test */
+    public function a_thread_requires_a_title()
+    {
+        $this->publishThread(['title' => null])
+            ->assertSessionHasErrors();
+    }
+
+    /** @test */
+    public function a_thread_requires_a_valid_channel()
+    {
+        factory(Channel::class, 2)->create();
+        $this->publishThread(['channel_id' => 33])->assertSessionHasErrors('channel_id');
+        $this->publishThread(['channel_id' => null])->assertSessionHasErrors('channel_id');
+    }
+
+    public function publishThread($overrides = [])
+    {
+        $this->withExceptionHandling()->signIn();
+
+        $thread = make(Thread::class, $overrides);
+
+        return $this->post('threads', $thread->toArray());
     }
 }

@@ -19,14 +19,16 @@ class RepliesController extends Controller
     /**
      * Persist a new reply.
      *
-     * @param  integer $channelId
-     * @param  Thread  $thread
+     * @param integer $channelId
+     * @param Thread $thread
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store($channelId, Thread $thread)
     {
+        $this->validate(request(), ['body' => 'required']);
+
         $thread->addReply([
-            'body' => request('body'),
+            'body'    => request('body'),
             'user_id' => auth()->id()
         ]);
 
@@ -36,7 +38,7 @@ class RepliesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Reply  $reply
+     * @param \App\Reply $reply
      * @return \Illuminate\Http\Response
      */
     public function show(Reply $reply)
@@ -47,7 +49,7 @@ class RepliesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Reply  $reply
+     * @param \App\Reply $reply
      * @return \Illuminate\Http\Response
      */
     public function edit(Reply $reply)
@@ -58,8 +60,8 @@ class RepliesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Reply  $reply
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Reply $reply
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Reply $reply)
@@ -70,7 +72,7 @@ class RepliesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Reply  $reply
+     * @param \App\Reply $reply
      * @return \Illuminate\Http\Response
      */
     public function destroy(Reply $reply)
