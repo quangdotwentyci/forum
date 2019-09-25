@@ -42,6 +42,15 @@ class Thread extends Model
      */
     protected $guarded = [];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('replyCount', function ($builder) {
+            $builder->withCount('replies');
+        });
+    }
+
     /**
      * Get a string path for the thread.
      *
@@ -95,13 +104,12 @@ class Thread extends Model
     /**
      * Apply all relevant thread filters.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder    $query
+     * @param  Builder       $query
      * @param  ThreadFilters $filters
      * @return Filters\Builder|Builder
      */
-    public function scopeFilter($query)
+    public function scopeFilter($query, ThreadFilters $filters)
     {
-        return $query;
+        return $filters->apply($query);
     }
-
 }
