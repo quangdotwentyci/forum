@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Filters\ThreadFilters;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -29,6 +31,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Channel $channel
  * @property-read \App\User $creator
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread whereChannelId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread filter(\App\Filters\ThreadFilters $filters)
  */
 class Thread extends Model
 {
@@ -88,4 +91,17 @@ class Thread extends Model
     {
         $this->replies()->create($reply);
     }
+
+    /**
+     * Apply all relevant thread filters.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder    $query
+     * @param  ThreadFilters $filters
+     * @return Filters\Builder|Builder
+     */
+    public function scopeFilter($query)
+    {
+        return $query;
+    }
+
 }
