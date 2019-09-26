@@ -17,7 +17,6 @@ class ThreadsController extends Controller
         $this->middleware('auth')->except(['index', 'show']);
     }
 
-
     /**
      * Display a listing of the resource.
      *
@@ -81,7 +80,7 @@ class ThreadsController extends Controller
     {
         return view('threads.show', [
             'thread' => $thread,
-            'replies'=> $thread->replies()->paginate(1)
+            'replies' => $thread->replies()->paginate(20)
         ]);
     }
 
@@ -94,7 +93,7 @@ class ThreadsController extends Controller
      */
     protected function getThreads(Channel $channel, ThreadFilters $filters)
     {
-        $threads = Thread::latest()->filter($filters);
+        $threads = Thread::with('channel')->latest()->filter($filters);
 
         if ($channel->exists) {
             $threads->where('channel_id', $channel->id);

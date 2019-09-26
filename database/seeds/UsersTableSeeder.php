@@ -16,7 +16,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'nhatquangprovodoi@gmail.com',
             'password' => bcrypt('nhatquang172')
         ])->each(function ($user) {
-            factory(\App\Thread::class, 3)->create([
+            factory(\App\Reply::class, 10)->create([
                 'user_id' => $user->id,
             ]);
         });
