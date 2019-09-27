@@ -32,6 +32,9 @@ class Activity extends Model
             ->with('subject')
             ->take($take)
             ->get()
+            ->loadMorph('subject', [
+                Reply::class => ['thread']
+            ])
             ->groupBy(function ($activity) {
                 return $activity->created_at->format('Y-m-d');
             });
