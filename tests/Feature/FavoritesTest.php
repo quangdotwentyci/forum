@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Activity;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
@@ -23,10 +24,13 @@ class FavoritesTest extends TestCase
         $this->signIn();
 
         $reply = create('App\Reply');
+        $this->assertEquals(2, Activity::count());
 
         $this->post('replies/' . $reply->id . '/favorites');
 
         $this->assertCount(1, $reply->favorites);
+        $this->assertEquals(3, Activity::count());
+
     }
 
     /** @test */
